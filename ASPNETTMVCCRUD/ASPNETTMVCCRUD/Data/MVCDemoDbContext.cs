@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ASPNETTMVCCRUD.Models.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASPNETTMVCCRUD.Data
 {
@@ -8,6 +9,6 @@ namespace ASPNETTMVCCRUD.Data
         {
 
         }
-
+        public DbSet<Employee> Employees { get; set; }
     }
 }
