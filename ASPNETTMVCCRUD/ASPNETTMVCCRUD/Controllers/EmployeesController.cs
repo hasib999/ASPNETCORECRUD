@@ -42,5 +42,58 @@ namespace ASPNETTMVCCRUD.Controllers
             await _mVCDemoDbContext.SaveChangesAsync();
             return RedirectToAction("Add");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> View(Guid id)
+        {
+            var employee = await _mVCDemoDbContext.Employees.FirstOrDefaultAsync(x => x.Id == id);
+            if(employee != null)
+            {
+                var viewModel = new UpdateEmployeeViewModel()
+                {
+                    Id = employee.Id,
+                    Name = employee.Name,
+                    Email = employee.Email,
+                    Salary = employee.Salary,
+                    Department = employee.Department,
+                    DateOfBirth = employee.DateOfBirth,
+                };
+                return await Task.Run(()=>View("View",viewModel));
+            }
+            return RedirectToAction("Index");            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> View(UpdateEmployeeViewModel model)
+        {
+            var employee = await _mVCDemoDbContext.Employees.FindAsync(model.Id);
+            if(employee != null)
+            {
+                employee.Name = model.Name;
+                employee.Email = model.Email;
+                employee.Salary = model.Salary;
+                employee.Department = model.Department;
+                employee.DateOfBirth = model.DateOfBirth;
+
+                await _mVCDemoDbContext.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(UpdateEmployeeViewModel model)
+        {
+            var employee = await _mVCDemoDbContext.Employees.FindAsync(model.Id);
+            if(employee != null)
+            {
+                _mVCDemoDbContext.Employees.Remove(employee);
+                await _mVCDemoDbContext.SaveChangesAsync();
+
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+
+        }
     }
 }
